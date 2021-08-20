@@ -19,9 +19,9 @@
                   </p>
                   <button
 						 @click="add"
-						 :disabled="!isAvailable"
-						 :class= "`btn ${isAvailable ? 'btn-success' :  'btn-secondary'} w-100 shadow-none`"> 
-                   {{ isAvailable  ? 'Add to cart' : "Added"}} 
+						 :disabled="!isAvailable || isInCart"
+						 :class= "`btn ${!isAvailable || isInCart ? 'btn-secondary' : 'btn-success'} w-100 shadow-none`"> 
+                   {{!isInCart ? 'Add to cart' : "Added"}} 
                   </button>
                 </div>
               </div>
@@ -34,6 +34,7 @@
 export default{
 	name: "Product",
 	props: {
+
 		name: {
 			type: String,
 			isRequired: true
@@ -53,11 +54,17 @@ export default{
 		isAvailable:{
 			type: Boolean,
 		},
+		id: Number
 	},
 	methods: {
 		add() {
 			this.$emit('add-to-cart');
 		},
+	},
+	computed: {
+		isInCart() {
+			return this.$root.isInCart(this.id);
+		}
 	}
 }
 </script>
