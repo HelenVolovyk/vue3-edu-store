@@ -30,28 +30,33 @@
 	   <div class="modal-footer">
           <button 
 			 @click="addToOrder"
+			
 			 type="button" class="btn btn-success">Place Order</button>
         </div>
   </form>
 </template>
 
 <script>
+
 export default {
   name: "CartBillingForm", 
+
 data () {
   return {
-	  firstName: "", 
+	   firstName: "", 
 		lastName: "",
-		sity: "",
+		city: "",
 		address: "", 
 		email: "",
 		phone: "",
 		isFirstNameValid: true,
 		isLastNameValid: true,
-		isSityValid: true,
-		isAddresssValid: true,
+		isCityValid: true,
+		isAddressValid: true,
 		isEmailValid: true,
 		isPhoneValid: true,
+		msg: [],
+		products:[]
     }
 },
 
@@ -80,7 +85,7 @@ data () {
 		  this.isCityValid = true;
 		  let checkCity = /[a-zA-Z]+/g;
 		  if ((newValue === "")
-			|| newValue.tolowerCase()
+		
 		   || !checkCity.test(city)) {
 		  this.isCityValid = false;
 		 
@@ -94,42 +99,47 @@ data () {
 			}
 	  },
 	  email(newValue){
-		  this.isEmailValid = true;
-		  let checkEmail = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-		  if(!checkEmail.test(email).toLowerCase()
-		  || newValue === "") {
-			this.isEmailValid = false;
-			
-		  }
+			let checkEmail =  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/ ;
+		 	this.isEmailValid = function(){
+			 return(this.email == "")? "":
+			 (this.checkEmail(this.email))? true : false;
+		 } 
+		 
 	  }, 
 	  phone(newValue){
-		  this.isPhoneValid = true;
-		  let checkPhone = /^\d[\d\(\)\ -]{4,14}\d$/;
-		  if(!checkPhone.test(phone)
-		  || newValue === ""){
-			this.isPhoneValid = false;
-		
+		   let checkPhone = /^\d[\d\(\)\ -]{4,14}\d$/;
+		   this.isPhoneValid = function(){
+			return(this. phone == "")? "":
+			(this.checkPhone(this.phone))? true : false;
 		  }
-	  }
+
+		  }
+	  
   },
-  methods: {
-	  placeOrder(){
-			
-	  }
-  },
+
  computed: {
-    isErrorInArray() {
-      return this.errors.length > 0;
+    hasErrors() {
+		return !this.isFirstNameValid || !this.isLastNameValid || !this.isCityValid || !this.isAddressValid || !this.isEmailValid || !this.isPhoneValid;
+		
     }
   },
   	methods: {
 		addToOrder() {
-	  		console.log(this.products);
-      	console.log(this.firstName, this.lastName, this.city, this.address, this.emailAddress, this.phone);
-			// this.$emit('add-to-order');
+			this.getProducts();
+			const user = {
+				'firstName': this.firstName,
+				'lastName,': this.lastName,
+				'city': this.city,
+				'address':  this.address,
+				'email': this.email,
+				'phone': this.phone
+			}
+			console.log(this.products);
+			console.log(user);
+	
 		},
-		products() {
-      	return this.$root.cartProducts;
+		getProducts() {
+      	this.products = this.$root.cartProducts;
     },
 	},
 }

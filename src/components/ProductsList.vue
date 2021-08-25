@@ -32,8 +32,7 @@ export default{
    components: { Product },
 	name: "ProductsList",
 		data: () => ({
-			products:[
-			]
+			products:[]
 		}),
 		mounted() {
 		this.fetchProducts();
